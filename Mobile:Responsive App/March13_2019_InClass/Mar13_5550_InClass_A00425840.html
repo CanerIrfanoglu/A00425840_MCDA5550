@@ -1,0 +1,43 @@
+<html>
+<head>
+<!-- CSS -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- JQ -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+<script>
+    //for bypassing the chrome error
+    $(document).bind('mobileinit', function () {
+        $.mobile.pushStateEnabled = false;
+    });
+</script>
+
+<!-- JQM -->
+<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+<script src="interactiveDrawing.js"></script>
+ 
+</head>
+<body>
+
+<div data-role="header" data-position="left">
+<h1 float="left">Shapes Drawing</h1>
+</div>
+<label>Red:</label><input type="range" min="0" max="255" step="1" value="0" id="red">
+<label>Green:</label><input type="range" min="0" max="255" step="1" value="0" id="green">
+<label>Blue:</label><input type="range" min="0" max="255" step="1" value="0" id="blue">
+<select id="shape" data-native-menu="false">
+    <option value="circle">Circle</option>
+    <option value="rectangle">Rectangle</option>
+    <option value="triangle">Triangle</option>
+</select>
+<input type="button" onclick="draws()" value="draw" id="drawButton">
+
+<canvas id="canvasElement" height="300" width="300">
+
+</canvas>
+
+
+</body>
+</html>

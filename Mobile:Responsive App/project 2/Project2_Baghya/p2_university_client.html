@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+	<script>
+		var SERVER_URL = 'http://dev.cs.smu.ca:8122';
+		function save() {
+
+			if ($("#name").val() == "") {
+				alert("University name needs to be entered");
+				$("#name").focus();
+				return false;
+			}
+			if ($("#address").val() == "") {
+				alert("University address needs to be entered");
+				$("#address").focus();
+				return false;
+			}
+			if ($("#phone").val() == "") {
+				alert("University phone number needs to be entered");
+				$("#phone").focus();
+				return false;
+			} 
+			var tokens= $("#phone").val().split('-')
+
+			for (var i = 0; i < tokens.length; i++) {
+				if (isNaN(tokens[i])) {
+					alert("Only numbers or hyphens needs to be used");
+					$("#phone").focus();
+					return false;
+    }//end if
+}//end for
+
+
+
+var newObj = {
+	"Name": $("#name").val(),
+	"Address": $("#address").val(),
+	"PhoneNumber": $("#phone").val()
+};
+//now send the request
+$.post(SERVER_URL + "/saveUniversity",
+	newObj,
+	function (data) {
+		alert("University Record saved successfully!");
+	}).fail(function (error) {
+		alert("Error: " +error.responseText);
+	});
+
+}//end if validateData()
+
+function search(){
+	var newObj = {
+		"Name":$('#searchKey').val()
+	};
+	$.post(SERVER_URL + "/search",
+		newObj,
+		function (data) {
+			$("#name").val(data[0].Name);
+			$("#address").val(data[0].Address);
+			$("#phone").val(data[0].PhoneNumber);
+			alert("Found the matched University!!!")
+			var dataTable = document.getElementById('searchdata');
+			dataTable.border ="1";
+			var interval = 1;
+			dataTable.innerHTML = '';
+
+			var row=dataTable.insertRow(0);
+			var Name=row.insertCell(0);
+			var Address=row.insertCell(1);
+			var PhoneNumber=row.insertCell(2);
+
+			Name.innerHTML='Name';
+			Address.innerHTML='Address';
+			PhoneNumber.innerHTML='Phone Number';
+
+			for(var i = 0; i <= data.length - 1; i = i + interval)
+			{
+				var row=dataTable.insertRow(-1);
+				var n=row.insertCell(0);
+				var n2=row.insertCell(1);
+				var n3=row.insertCell(2);
+				n.innerHTML = data[i].Name;
+				n2.innerHTML = data[i].Address;
+				n3.innerHTML = data[i].PhoneNumber;
+			}
+			
+		}).fail(function (error) {
+			alert("Error: " +error.responseText);
+		});
+	}
+
+	function displayRecords() {
+//now send the request
+$.post(SERVER_URL + "/display",
+	function (data) {
+		var dataTable = document.getElementById('data');
+		dataTable.border ="1";
+		var interval = 1;
+		dataTable.innerHTML = '';
+
+		var row=dataTable.insertRow(0);
+		var Name=row.insertCell(0);
+		var Address=row.insertCell(1);
+		var PhoneNumber=row.insertCell(2);
+
+		Name.innerHTML='Name';
+		Address.innerHTML='Address';
+		PhoneNumber.innerHTML='Phone Number';
+
+		for(var i = 0; i <= data.length - 1; i = i + interval)
+		{
+			var row=dataTable.insertRow(-1);
+			var n=row.insertCell(0);
+			var n2=row.insertCell(1);
+			var n3=row.insertCell(2);
+			n.innerHTML = data[i].Name;
+			n2.innerHTML = data[i].Address;
+			n3.innerHTML = data[i].PhoneNumber;
+		}
+	}).fail(function (error) {
+		alert("Error: " +error.responseText);
+	});
+
+}
+
+function delete_uni(){
+
+	var newObj = {
+		"Name": $("#name").val(),
+
+	};
+//now send the request
+$.post(SERVER_URL + "/delete",
+	newObj,
+	function (data) {
+		alert("University record successfully deleted!");
+	}).fail(function (error) {
+		alert("Error: " +error.responseText);
+	});
+	window.location.reload(true); 
+}
+
+
+</script>
+</head>
+<html>
+<title>
+	University Database
+</title>
+<body>
+	<div data-role="page" data-theme="a" >
+		<div data-role="header" data-id="persistent" data-position="fixed" data-theme="b"><h1>University Database</h1></div>
+		<div data-role="content">
+			<label for="name">Name: </label>
+			<input type="text" name="name" id="name" required="required" placeholder="Enter Name"/>	
+			<br>
+			<label for="address">Address: </label>
+			<input type="text" name="address" id="address" required placeholder="Enter Address"/>	
+			<br>
+			<label for="phone">Phone: </label>
+			<input type="tel" name="phone" id="phone" required placeholder="Enter Phone Number"/>	
+			<br>
+			
+			<div class="">
+				<input type="button" onclick="save()"value="Save" />
+				<p align="center">Instruction : To delete a record type in the
+				university name in the name box.</p>
+				<input type="button" onclick="delete_uni()" value="Delete" />
+			</div>
+		</div>
+		
+		<div data-role="content">
+			<label for="searchKey">Search: </label>
+			<input type="text" name="searchKey" id="searchKey" required placeholder="Enter Name to Search"/>	
+			
+			<table id="searchdata">
+
+			</table><br>
+
+			<br>
+			<br>
+			<div class="">
+				<input type="button" onclick="search()" value="Search" />
+				<input type="button" onclick="displayRecords()" value="Display All Records" />
+			</div>
+			<table id="data" >
+			</table>
+		</div>
+		
+		
+		
+		<div data-role = footer data-id ="persistent" data-theme="b" data-position="fixed">
+			<h3>Developed by Caner</h3>
+		</div>
+		
+	</div>
+	
+	</html>

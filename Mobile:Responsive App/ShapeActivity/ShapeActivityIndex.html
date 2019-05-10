@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+        <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="ClientSide.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <div data-role='page'>
+            <div data-role = "header" data-id = "persistent" data-position="">
+                <h1><u>Shape Draw</u></h1>
+            </div>
+            <div data-role="fieldcontain">
+                <label for="x"  data-inline="true">X:</label><input  data-inline="true" type="number" id="x">
+            </div>
+            <div data-role="fieldcontain">
+                <label for="y"  data-inline="true">Y:</label><input data-inline="true" type="number" id="y">
+            </div>
+            <div data-role="fieldcontain">
+                <label for="w"  data-inline="true">Width:</label><input data-inline="true" type="number" id="w">
+            </div>
+            <div data-role="fieldcontain">
+                <label for="h"  data-inline="true">Height:</label><input data-inline="true" type="number" id="h">
+            </div>
+            <div data-role="fieldcontain">
+                <label for="c"  data-inline="true">Colour:</label><input data-inline="true" type="text" id="c">
+            </div>
+
+            <input type="button" value="Save" id="saveButton">
+            <input type="button" onclick = "draw()" value="Draw" id="drawButton">
+
+            <canvas id="canvasElement" width="400" height="600"></canvas>
+            <script src="rectangles-server.js" type="text/javascript"></script>
+
+            <div data-role = footer data-id ="persistent" data-position="fixed">
+                <h3>Developed by Caner</h3>
+            </div>
+        </div>
+
+    </body>
+</html>

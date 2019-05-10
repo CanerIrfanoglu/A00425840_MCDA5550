@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Learning </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+    <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    
+    
+    <!-- JQ -->
+    <script>//for bypassing the chrome error$(document).bind('mobileinit', function () {$.mobile.pushStateEnabled = false;});
+     //#endregion</script>
+
+    <!-- JQM -->
+    <script src="scripts/RGraph.common.core.js"></script>
+    <script src="scripts/RGraph.common.dynamic.js"></script>
+    <script src="scripts/RGraph.common.effects.js"></script>
+    <script src="scripts/RGraph.line.js"></script>
+    <script src="scripts/RGraph.cornergauge.js"></script>
+    <script src="scripts/RGraph.hprogress.js"></script>
+
+    
+    <script type="text/javascript">
+              /* Adds given text value to the password text field
+         */
+      
+      $(document).on("pageshow", function () {
+         if ($('.ui-page-active').attr('id') == "pageRecords"){
+            loadPageRecords();
+            loadExpenses();
+
+         }
+
+         if ($('.ui-page-active').attr('id') == "pageUserInfo"){
+            loadUserInfo();
+         }
+
+
+
+
+  /*  if ($('.ui-page-active').attr('id') == "pageUserInfo") {
+        showUserForm();
+    } else if ($('.ui-page-active').attr('id') ==
+            "pageRecords") {
+        loadUserInformation();
+        listRecords();
+    } else if ($('.ui-page-active').attr('id') ==
+            "pageAdvice") {
+        advicePage();
+        resizeGraph();
+    } else if ($('.ui-page-active').attr('id') ==
+            "pageGraph") {
+        drawGraph();
+        resizeGraph();
+    }*/
+
+});
+
+
+
+
+
+
+        $(document).ready(function(){
+        // Removes all record data from localStorage 
+        $("#btnClearHistory").click(function () {
+          localStorage.removeItem("tbRecords");
+          /*listRecords();*/
+          alert("All records have been deleted.");
+          loadExpenses();
+          window.location.reload();
+        });
+      });
+
+
+
+        function addValueToPassword(button) {
+            var currVal = $("#passcode").val();
+            if(button === "bksp"){
+                $("#passcode").val(currVal.substring(0, currVal.length - 1));
+            }
+            else{
+              $("#passcode").val(currVal.concat(button));
+            }
+          }
+
+        function saveSignUpUser(){
+
+          if (validateUserForm() == true){
+            var user = {
+              "FirstName" :$("#signupFirstName").val(),
+              "LastName" : $("#signupLastName").val(),
+              "DateOfBirth" : $("#dateOfBirth").val(),
+              "SINNumber" : $("#signupsinNumber").val(),
+              "NewPassword" : $("#confirmPassword").val(),
+              "Gender": $("#signgenderType option:selected").val()
+              };
+
+              try{
+                
+                localStorage.setItem("user", JSON.stringify(user));
+                alert("Saving Information");
+                
+                $.mobile.changePage("#legalNotice");
+                window.location.reload();
+              } catch(e){
+                
+                if (window.navigator.vendor === "Google Inc."){
+                  if (e == DOMException.QUOTA_EXCEEDED_ERR) {
+                  alert("Error: Local Storage limit exceeds");
+                 }
+               }  else if (e == QUOTA_EXCEEDED_ERR){
+                alert("Error: Saving to local Storage");
+               }
+               console.log(e);
+            }
+            }else
+          {
+            alert(" Invalid enteries");
+             /*$.mobile.changePage("#pageSignup");*/
+              window.location.reload();
+          }
+        }
+
+        function redirectPage(){
+          //if the password matches
+            var user = JSON.parse(localStorage.getItem("user"));
+            if (document.getElementById("passcode").value === user.NewPassword && document.getElementById("username").value === user.FirstName )
+            {
+                //if not agreed yet
+                if (localStorage.getItem("agreedToLegal") === null) 
+               {
+                    $("#btnEnter").attr("href","#legalNotice").button();
+                } 
+                else if (localStorage.getItem("agreedToLegal") === "true") 
+                {
+                       $("#btnEnter").attr("href","#pageMenu").button();
+                }
+            }
+            else {
+                  alert("Incorrect username/password, please try again.");
+                  $.mobile.changePage("#pageHome");
+                   window.location.reload();
+              }
+
+        }
+
+        /** Validate the User Form **/
+        function validateUserForm() { 
+
+              var currentDate = new Date();
+              var dd = currentDate.getDate();
+              var mm = currentDate.getMonth() + 1;
+              var yyyy = currentDate.getFullYear();
+              if (dd < 10) {
+                dd = '0' + dd;
+              }
+              if (mm < 10) {
+                mm = '0' + mm;
+              }
+              currentDate = yyyy + '-' + mm + '-' + dd;
+              //Check for empty fields in the form
+                if (
+                  ($("#signupFirstName").val() != "") && 
+                  ($("#newPassword").val()!= "") && 
+                  ($("#confirmPassword").val()!= "") &&
+                  ($("#dateOfBirth").val() <= currentDate) &&
+                  ($("#signupLastName").val() != "") &&
+                  ($("#signupsinNumber").val() != "") &&
+                  ($("#dateOfBirth").val() != "") &&
+                  ($("#signgenderType option:selected").val() != "Choose Gender")) {
+                  return true;
+                } else {
+                  return false;
+                }
+          }
+        
+
+        function saveUserForm() {
+
+
+            var user = {
+               "FirstName": $("#updateFirstName").val(),
+              "LastName": $("#updateLastName").val(),
+              "DateOfBirth": $("#updatedateOfBirth").val(),
+              "SINNumber": $("#updatesinNumber").val(),
+              "NewPassword": $("#editPassword").val(),
+              "Gender": $("#updategenderType option:selected").val()
+            };
+            try {
+                localStorage.setItem("user", JSON.stringify(
+                  user));
+                alert("Saving Information");
+                $.mobile.changePage("#pageMenu");
+                window.location.reload();
+              } catch (e) {
+                /* Google browsers use different error 
+                 * constant
+                 */
+                if (window.navigator.vendor ===
+                  "Google Inc.") {
+                  if (e == DOMException.QUOTA_EXCEEDED_ERR) {
+                    alert("Error: Local Storage limit exceeds.");
+                  }
+                } else if (e == QUOTA_EXCEEDED_ERR) {
+                  alert("Error: Saving to local storage.");
+                }
+
+                console.log(e);
+              }
+          }
+
+        function loadUserInfo(){
+           var user = JSON.parse(localStorage.getItem("user"));
+           if (user != null) {
+                /*document.getElementById("signupFirstName").value=user.FirstName*/
+                $("#updateFirstName").val(user.FirstName);
+                $("#updateLastName").val(user.LastName);
+                $("#updatedateOfBirth").val(user.DateOfBirth);
+                $("#updatesinNumber").val(user.SINNumber);
+                $("#editPassword").val(user.NewPassword);
+                $('#updategenderType option[value=' + user.Gender + ']').attr('selected', 'selected');
+                $("#updategenderType option:selected").val(user.Gender);
+                $('#updategenderType').selectmenu('refresh',true);
+            }
+       }
+
+
+        function saveDisclaimer(){
+          localStorage.setItem("agreedToLegal","true");
+          $.mobile.changePage("#pageMenu");
+          window.location.reload();
+        }
+
+        
+        function loadPageRecords(){
+         
+         try {
+          var user = JSON.parse(localStorage.getItem(
+                      "user"));
+          } catch (e) {
+              if (window.navigator.vendor ===
+                      "Google Inc.") {
+                  if (e == DOMException.QUOTA_EXCEEDED_ERR) {
+                      alert(
+                              "Error: Local Storage limit exceeds."
+                              );
+                  }
+              } else if (e == QUOTA_EXCEEDED_ERR) {
+                  alert("Error: Saving to local storage.");
+              }
+
+              console.log(e);
+          }
+          if (user != null) {
+              $("#divUserSection").empty();
+
+
+              $("#divUserSection").append("User's Name:" +
+                      user.FirstName + " " + user.LastName +
+                      "<br>DateOfBirth: " + user.DateOfBirth +
+                      "<br>SIN Number: " + user.SINNumber +
+                      "<br>New Password : " + user.NewPassword +
+                      "<br>Gender : " + user.Gender);
+              $("#divUserSection").append(
+                      "<br><a href='#pageUserInfo' data-mini='true' data-role='button' data-icon='edit' data-iconpos='left' data-inline='true' >Edit Profile</a>"
+                      );
+              $('#divUserSection [data-role="button"]').button(); // 'Refresh' the button
+          }
+        }
+
+       
+
+        function checkAddOrEditRecord(){
+          var formOperation = $("#btnSubmitRecord").val();
+          if (formOperation == "Add Expense") {
+             addRecord();
+             $.mobile.changePage("#pageRecords");
+          } else if (formOperation == "Update Expense") {
+                editRecord($("#btnSubmitRecord").attr("indexToEdit"));
+                $.mobile.changePage("#pageRecords");
+                $("#btnSubmitRecord").removeAttr("indexToEdit");
+          }
+          /*Must return false, or else submitting form
+           * results in reloading the page
+           */
+          return false;
+      }
+
+      function addRecord(){
+            var record = {
+                  "Date": $('#datExpenseDate').val(),
+                  "ExpenseType": $('#txtType').val(),
+                  "ExpenseAmount": $('#txtAmount').val()
+             };
+            var tbRecords = JSON.parse(localStorage.getItem("tbRecords"));
+            if (tbRecords == null) {
+                tbRecords = [];
+            }
+            tbRecords.push(record);
+            localStorage.setItem("tbRecords", JSON.stringify(tbRecords));
+            clearNewRecordForm();
+           /* loadExpenses();*/
+      }
+
+      function loadExpenses()
+      {
+
+        try {
+        var tbRecords = JSON.parse(localStorage.getItem("tbRecords"));
+      } catch (e) {
+        if (window.navigator.vendor ===
+                "Google Inc.") {
+            if (e == DOMException.QUOTA_EXCEEDED_ERR) {
+                alert(
+                        "Error: Local Storage limit exceeds."
+                        );
+            }
+        } else if (e == QUOTA_EXCEEDED_ERR) {
+            alert("Error: Saving to local storage.");
+        }
+
+        console.log(e);
+    }
+
+    //Load previous records, if they exist
+    if (tbRecords != null) {
+
+        //Initializing the table
+        $("#tblRecords").html(
+                "<thead>" +
+                "   <tr>" +
+                "     <th>Date </th>" +
+                "     <th> ExpenseType </th>" +
+                "     <th> ExpenseAmount </th>" +
+                "     <th> Edit / Delete</th>" +
+                "   </tr>" +
+                "</thead>" +
+                "<tbody>" +
+                "</tbody>"
+                );
+
+        //Loop to insert the each record in the table
+        for (var i = 0; i < tbRecords.length; i++) {
+            var rec = tbRecords[i];
+            $("#tblRecords tbody").append("<tr>" +
+                    "  <td>" + rec.Date + "</td>" +
+                    "  <td>" + rec.ExpenseType + "</td>" +
+                    "  <td>" + rec.ExpenseAmount + "</td>" +
+                    "  <td><a data-inline='true' data-mini='true' data-role='button' href='#pageNewRecordForm' onclick='callEdit(" +
+                    i +
+                    ")' data-icon='edit' data-iconpos='notext'></a>" +
+                    "  <a data-inline='true'  id = 'btndeleteRecord' data-mini='true' data-role='button' href='#' onclick='callDelete(" +
+                    i +
+                    ")' data-icon='delete' data-iconpos='notext'></a></td>" +
+                    "</tr>");
+        }
+
+        $('#tblRecords [data-role="button"]').button();
+    } else {
+        tbRecords = [];
+        $("#tblRecords").html("");
+    }
+    return true;
+
+      }
+
+
+    function addNewRecord() {
+     $("#btnSubmitRecord").val("Add Expense").button("refresh");
+   }
+
+
+    function showRecordForm(index) {
+        try {
+            var tbRecords = JSON.parse(localStorage.getItem(
+                    "tbRecords"));
+            var rec = tbRecords[index];
+            $('#datExpenseDate').val(rec.Date),
+                    $('#txtType').val(rec.ExpenseType),
+                    $('#txtAmount').val(rec.ExpenseAmount)
+        } catch (e) {
+            if (window.navigator.vendor ===
+                    "Google Inc.") {
+                if (e == DOMException.QUOTA_EXCEEDED_ERR) {
+                    alert(
+                            "Error: Local Storage limit exceeds."
+                            );
+                }
+            } else if (e == QUOTA_EXCEEDED_ERR) {
+                alert("Error: Saving to local storage.");
+            }
+
+            console.log(e);
+        }
+}
+
+
+function editRecord(index) {
+    try {
+        var tbRecords = JSON.parse(localStorage.getItem(
+                "tbRecords"));
+        tbRecords[index] = {
+            "Date": $('#datExpenseDate').val(),
+            "ExpenseType": $('#txtType').val(),
+            "ExpenseAmount": $('#txtAmount').val()
+        }; 
+        localStorage.setItem("tbRecords", JSON.stringify(
+                tbRecords));
+        alert("Saving Information");
+        clearRecordForm();
+        listRecords();
+    } catch (e) {
+        if (window.navigator.vendor ===
+                "Google Inc.") {
+            if (e == DOMException.QUOTA_EXCEEDED_ERR) {
+                alert(
+                        "Error: Local Storage limit exceeds."
+                        );
+            }
+        } else if (e == QUOTA_EXCEEDED_ERR) {
+            alert("Error: Saving to local storage.");
+        }
+
+        console.log(e);
+    }
+    return true;
+}
+
+      function callEdit(index) {
+          $("#btnSubmitRecord").attr("indexToEdit", index);
+          $("#btnSubmitRecord").val("Update Expense").button("refresh");
+          showRecordForm($("#btnSubmitRecord").attr("indexToEdit"));
+      }
+
+
+
+      function callDelete(index) {
+          deleteRecord(index);
+          loadExpenses();
+      }
+
+
+      function deleteRecord(index) {
+          try {
+              var tbRecords = JSON.parse(localStorage.getItem("tbRecords"));
+
+              tbRecords.splice(index, 1);
+
+              if (tbRecords.length == 0) {
+                  localStorage.removeItem("tbRecords");
+              } else {
+                  localStorage.setItem("tbRecords", JSON.stringify(
+                          tbRecords));
+              }
+          } catch (e) {
+              if (window.navigator.vendor ===
+                      "Google Inc.") {
+                  if (e == DOMException.QUOTA_EXCEEDED_ERR) {
+                      alert(
+                              "Error: Local Storage limit exceeds."
+                              );
+                  }
+              } else if (e == QUOTA_EXCEEDED_ERR) {
+                  alert("Error: Saving to local storage.");
+              }
+
+              console.log(e);
+          }
+}
+
+     function clearNewRecordForm() {
+        $('#datExpenseDate').val(""),
+                $('#txtType').val(""),
+                $('#txtAmount').val("")
+        return true;
+      }
+
+
+
+      function drawgraph(){
+         if (localStorage.getItem("tbRecords") === null) {
+        alert("No records exist.");
+
+        $(location).attr("href", "#pageMenu");
+        }else {
+           var c = document.getElementById("GraphCanvas");
+           var ctx = c.getContext("2d");
+
+           ctx.fillStyle = "#FFFFFF";
+           ctx.fillRect(0, 0, 500, 500);
+
+            var tbRecords = JSON.parse(localStorage.getItem("tbRecords"));
+            ExpenseArr = []
+            Datearr = []
+
+             tbRecords.sort(function (a, b) {
+                  return  +new Date(a.Date) - +new Date(b.Date);
+              });
+              console.log(tbRecords);
+
+          for (var i = 0; i < tbRecords.length; i++) {
+              var date = new Date(tbRecords[i].Date);
+              var m = date.getMonth() + 1;
+              var d = date.getDate() + 1;
+              Datearr[i] = (m + "/" + d);
+              ExpenseArr[i] = parseFloat(tbRecords[i].ExpenseAmount);
+          }
+
+          drawlines(ExpenseArr, 0, 0, Datearr)
+          labelaxes()
+          }
+}
+
+
+
+      function drawlines(ExpenseArr, expenseUpper, expenseLower,
+        Datearr){
+            var expenseLine = new RGraph.Line("GraphCanvas",ExpenseArr, 0, 0)
+            .Set("labels", Datearr)
+            .Set("colors", ["blue"])
+            .Set("shadow", true)
+            .Set("shadow.offsetx", 1)
+            .Set("shadow.offsety", 1)
+            .Set("linewidth", 1)
+            .Set("numxticks", 6)
+            .Set("scale.decimals", 2)
+            .Set("xaxispos", "bottom")
+            .Set("gutter.left", 40)
+            .Set("tickmarks", "filledcircle")
+            .Set("ticksize", 5)
+            .Set("chart.labels.ingraph", [, , ["Amount",
+                    "blue", "yellow", 1, 80
+                ], , ])
+            .Set("chart.title", "ExpenseAmount")
+            .Draw();
+      }
+
+      function labelaxes() {
+        var c = document.getElementById("GraphCanvas");
+        var ctx = c.getContext("2d");
+        ctx.font = "11px Georgia";
+        ctx.fillStyle = "green";
+        ctx.fillText("Date(MM/DD)", 400, 470);
+        ctx.rotate(-Math.PI / 2);
+        ctx.textAlign = "center";
+        ctx.fillText("Expense Amount", -250, 10);
+}
+
+
+      function drawAdviceCanvas() {
+        var canvas = document.getElementById("AdviceCanvas");//get the element
+        var ctx = canvas.getContext("2d");//get the context
+
+        var tbRecords = JSON.parse(localStorage.getItem("tbRecords"));
+        var expense = 0;
+        for(var i=0; i<tbRecords.length;i++){
+          expense = expense + parseInt(tbRecords[i].ExpenseAmount)
+          }
+
+
+        ctx.font = "22px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Your current expense is " + expense +  ".", 25, 320);
+
+          ctx.fillText(
+            "Your target Expense range is: 50-100CAD",  25, 350);
+          levelwrite(ctx, expense);
+          levelMeter(ctx, expense);
+      }
+
+
+      //For deciding what to write for given values
+    //For deciding what to write for given values
+      function levelwrite(ctx, expense) {
+        if ((expense >= 1) && (expense <= 10)) {
+          writeAdvice(ctx, "green");
+        } else if ((expense > 10) && (expense <= 50)) {
+          writeAdvice(ctx, "yellow");
+        } else {
+          writeAdvice(ctx, "red");
+        }
+      }
+
+
+      function writeAdvice(ctx, level) {
+          var adviceLine1 = "";
+          var adviceLine2 = "";
+
+          if (level == "red") {
+            adviceLine1 = "Please take care of the Expenses.";
+            adviceLine2 = "Its exceeding more than set limit.";
+          } else if (level == "yellow") {
+            adviceLine1 = "The expenses needs to be checked!!";
+          } else if (level = "green") {
+            adviceLine1 =
+              "Your expenses are on track .";
+          }
+          ctx.fillText("Your Expense is " + level +
+            ".", 25, 380);
+          ctx.fillText(adviceLine1, 25, 410);
+          ctx.fillText(adviceLine2, 25, 440);
+        }
+
+
+      function levelMeter(ctx, expense) {
+
+        
+
+        if (expense <= 100) {
+          var cg = new RGraph.CornerGauge(
+              "AdviceCanvas", 0, 100, expense)
+            cg.Set("chart.colors.ranges", [
+              [50, 100, "red"],
+              [10, 50, "yellow"],
+              [1, 10, "#0f0"]
+            ]);
+        } else {
+          var cg = new RGraph.CornerGauge(
+              "AdviceCanvas", 0, expense, expense)
+            cg.Set("chart.colors.ranges", [
+              [50, 100, "red"],
+              [10, 50, "yellow"],
+              [0.01, 0.1, "#0f0"],
+              [100.01, expense, "red"]
+            ]);
+        }
+        drawMeter(cg);
+      }
+
+      // Meter properties
+      function drawMeter(g) {
+           g.Set("chart.value.text.units.post", " CAD")
+          g.Set("chart.value.text.boxed", false)
+          g.Set("chart.value.text.size", 14)
+          g.Set("chart.value.text.font", "Verdana")
+          g.Set("chart.value.text.bold", true)
+          g.Set("chart.value.text.decimals", 2)
+          g.Set("chart.shadow.offsetx", 5)
+          g.Set("chart.shadow.offsety", 5)
+          g.Set("chart.scale.decimals", 2)
+          g.Set("chart.title", "Expense Limit")
+          g.Set("chart.radius", 250)
+          g.Set("chart.centerx", 50)
+          g.Set("chart.centery", 250)
+          g.Draw();
+      }
+
+    function resizeGraph() {
+        if ($(window).width() < 700) {
+            $("#GraphCanvas").css({
+                "width": $(window).width() - 50
+            });
+            $("#AdviceCanvas").css({
+                "width": $(window).width() - 50
+            });
+        }
+    }
+
+
+    $(window).resize(function () {
+        resizeGraph();
+    });
+        
+
+    </script>
+    
+    
+</head>
+
+   <body>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Start of first page -->
+        <div data-role="page" id="pageHome">
+            <div data-role="header">
+               <h1>Expense Tracker</h1>
+            </div>
+            <div data-role="content">
+               Username:
+               <input type="text" id="username">
+               Password :
+               <input type="password" id="passcode">
+
+               <div data-role="controlgroup" id="numKeyPad">
+                 <a data-role="button" id="btnEnter" onclick="redirectPage()">Login</a>
+                 <a href="#pageAbout" data-role="button">About</a>
+                 <a href="#pageSignup" data-role="button">New User? Please sign up</a>
+               </div>
+               
+               <div data-role="controlgroup" data-type="horizontal">
+                 <a data-role="button" onclick="addValueToPassword(7)">7</a>
+                 <a data-role="button" onclick="addValueToPassword(8)">8</a>
+                 <a data-role="button" onclick="addValueToPassword(9)">9</a>
+               </div>
+               <div data-role="controlgroup" data-type="horizontal">
+                 <a data-role="button" onclick="addValueToPassword(4)">4</a>
+                 <a data-role="button" onclick="addValueToPassword(5)">5</a>
+                 <a data-role="button" onclick="addValueToPassword(6)">6</a>
+               </div>
+               <div data-role="controlgroup" data-type="horizontal">
+                 <a data-role="button" onclick="addValueToPassword(1)">1</a>
+                 <a data-role="button" onclick="addValueToPassword(2)">2</a>
+                 <a data-role="button" onclick="addValueToPassword(3)">3</a>
+               </div>
+               <div data-role="controlgroup" data-type="horizontal">
+                 <a data-role="button" onclick="addValueToPassword(0)">0</a>
+                 <a data-role="button" onclick="addValueToPassword('bksp')" data-icon="delete">del</a>
+               </div>
+            </div>
+
+            <div data-role= footer data-id = "persistent" data-position = "fixed">
+               <h1>
+                   Developed by Gagan
+               </h1>
+            </div>
+
+         </div>
+
+
+         <!--About Page -->
+      <div data-role="page" id="pageAbout">
+          
+          <div data-role="header">
+            <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left">Home</a>
+            <h1>Info</h1>
+          </div>
+         
+          <div data-role="content">
+            <h1>Expense Tracker</h1>
+            <h4>Every Penny Matters!</h4><br>
+            <h4>It really is important to keep track of how you are spending your money.
+            It is the first step to understanding how you are managing your money, and to taking control of your finances. 
+            It may seem like a lot of work when you first begin, but you can make it as simple or complicated as you want to. Tracking your expenses can help you stop feeling like you have little to show for your hard work. 
+            </h4><br><br><br>
+          </div>
+
+          <div data-role= footer data-id = "persistent" data-position = "fixed">
+            <h1>
+               Developed by Gagan
+            </h1>
+         </div>
+
+      </div>
+   
+
+      <!--Sign Up Page/Form -->
+         <!--Header of the Page -->
+      <div data-role="page" id="pageSignup">
+         <div data-role="header">
+            <a href="#pageHome" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+            <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+            <h1>Profile</h1>
+         </div>
+      <!-- Content for the User Information -->
+         <div data-role="content">
+            <form id="frmSignForm" action="">
+              <div data-role="fieldcontain">
+                <label for="signupFirstName">First Name: </label>
+                <input type="text" placeholder="First Name" name="signupFirstName" data-mini="false" id="signupFirstName" value="" required>
+              </div>
+              <div data-role="fieldcontain">
+                <label for="signupLastName">Last Name: </label>
+                <input type="text" placeholder="Last Name" name="signupLastName" data-mini="false" id="signupLastName" value="" required>
+              </div>
+              <div data-role="fieldcontain">
+                  <label for="dateOfBirth">Date: </label>
+                  <input type="date" name="dateOfBirth" data-mini="false" id="dateOfBirth" value="">
+              </div>
+              <div data-role="fieldcontain">
+                <label for="addPassword">New Password: </label>
+                <input type="password" placeholder="New Password" name="addPassword" data-mini="false" id="addPassword" value="" required>
+              </div>
+              <div data-role="fieldcontain">
+                <label for="confirmPassword">Confirm Password: </label>
+                <input type="password" placeholder="Confirm Password" name="confirmPassword" data-mini="false" id="confirmPassword" value="" required>
+              </div>
+              <div data-role="fieldcontain">
+                <label for="signupsinNumber">SIN Number: </label>
+                <input type="text" placeholder="Sin Number" name="signupsinNumber" data-mini="false" id="signupsinNumber" value="" required>
+              </div>
+              <div data-role="fieldcontain">
+                <label for="signgenderType" class="select">Gender: </label>
+                <select name="signgenderType" id="signgenderType" data-mini="false" data-native-menu="false" required>
+                  <option>Choose Gender</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+                <div data-role="fieldcontain">
+                  <input type="submit" id="btnUserAdd" data-icon="check" data-iconpos="left" value="Sign Up!" data-inline="true" onclick="saveSignUpUser()">
+                </div>
+            </form>
+         </div>
+      </div>
+
+       <!--Disclaimer Page -->
+      <div data-role="page" id="legalNotice" data-close-btn="none">
+        
+        <div data-role="header" >
+            <h1>Disclaimer</h1>
+        </div>
+        
+        <div data-role="content">
+              We use some information on your profile to give best service! Please agree to continue.
+              <br>
+              <a href="#pageUserInfo" id="noticeYes" data-role="button" data-icon ="forward" data-mini ="false" onclick="saveDisclaimer()">Yes</a>
+        </div>
+
+      </div>
+
+
+
+      <!--User Information Page/Form -->
+  <!--Header of the Page -->
+    <div data-role="page" id="pageUserInfo">
+        
+            <div data-role="header">
+                <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+                <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+                <h1>Profile</h1>
+            </div>
+            <div data-role="content">
+                <form id="frmSignForm" action="">
+
+            <div data-role="fieldcontain">
+                    <label for="updateFirstName">First Name: </label>
+                    <input type="text" placeholder="First Name" name="updateFirstName" data-mini="false" id="updateFirstName" required>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="updateLastName">Last Name: </label>
+                    <input type="text" placeholder="Last Name" name="updateLastName" data-mini="false" id="updateLastName" required>
+                </div>
+                    <div data-role="fieldcontain">
+                        <label for="updatedateOfBirth">Date: </label>
+                        <input type="date" name="updatedateOfBirth" data-mini="false" id="updatedateOfBirth" >
+                    </div>
+
+                    <div data-role="fieldcontain">
+                        <label for="editPassword">Edit Password: </label>
+                        <input type="password" placeholder="Edit Password" name="editPassword" data-mini="false" id="editPassword"  required>
+                  </div>
+                    <div data-role="fieldcontain" class="ui-input-text">
+                        <label for="updatesinNumber">SIN Number: </label>
+                        <input type="text" placeholder="Sin Number" name="updatesinNumber" data-mini="false" id="updatesinNumber" required>
+                    </div>
+                  <div data-role="fieldcontain">
+                        <label for="updategenderType" class="select">Gender: </label>
+                        <select name="updategenderType" id="updategenderType" data-mini="false"data-native-menu="false" required>
+                            <option>Choose Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div> 
+       <input type="submit" id="btnUserUpdate" data-icon="check" data-iconpos="left" value="Update" data-inline="true" onclick="saveUserForm()"> 
+    </form>
+</div>
+</div>
+      <!-- Menu page -->
+  <div data-role="page" id="pageMenu">
+    <div data-role="header">
+      <a href="#pageHome" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Expense Tracker</h1>
+    </div>
+    <div data-role="content">
+      <div data-role="controlgroup">
+        <a href="#pageUserInfo" id = "profile_button" data-role="button">Profile</a>
+        <a href="#pageRecords" id = "records_button" data-role="button">Records</a>
+        <a href="#pageGraph" onclick="drawgraph()" data-role="button">Graph</a>
+        <a href="#pageAdvice" onclick = "drawAdviceCanvas()" data-role="button">Suggestions</a>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Records page -->
+  <div data-role="page" id="pageRecords">
+      <div data-role="header">
+         <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+         <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+         <h1>Records</h1>
+      </div>
+      <div data-role="content">
+         <!-- User's Information Section -->
+         <div data-role="fieldcontain" id="divUserSection">
+          
+         </div>
+         
+         <h3 align="center">Expense History</h3>
+         
+         <div data-role="fieldcontain">
+           <!-- Records Table -->
+           <table id="tblRecords" class="ui-responsive table-stroke">
+              <tr>
+                  <th>Date</th>
+                  <th>Expense Type</th>
+                  <th>Expense Amount</th>
+                  <th>Edit/Delete</th>
+              </tr>
+           </table>
+           <table id="tblvalues" class = "ui-responsive table-stroke">
+              <tr id = 'tbrows'>
+                
+              </tr>
+
+           </table>
+         </div>
+         
+         <div data-role="fieldcontain">
+           <a href="#pageNewRecordForm" onclick="addNewRecord()" id="btnAddRecord" data-role="button" data-icon="plus" >Add New Entry</a>
+           <a href="#" data-role="button" id="btnClearHistory" data-icon="delete" >Clear History</a>
+         </div>
+
+      </div>
+  </div>
+
+
+   <!-- New Record Form page -->
+  <div data-role="page" id="pageNewRecordForm">
+    <div data-role="header">
+      <a href="#pageMenu"  data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>New Expense</h1>
+    </div>
+   
+    <div data-role="content">
+      <form id="frmNewRecordForm" action="">
+        <div data-role="fieldcontain">
+          <div data-role="fieldcontain">
+            <label for="datExpenseDate">Date: </label>
+            <input type="date" name="datExpenseDate" data-mini="false" id="datExpenseDate" value="">
+          </div> 
+
+          <div data-role="fieldcontain">
+            <label for="txtType"> Expense Type </label>          
+            <input type="text" name="txtType"
+            data-mini="false" id="txtType" value="">
+          </div>
+
+          <div data-role="fieldcontain">
+            <label for="txtAmount">Expense Amount : </label>
+            <input type="number"  placeholder="Amount in CAD" name="txtAmount"
+            data-mini="false" id="txtAmount" value="">
+          </div>
+
+        </div>
+        
+        <input type="submit" id="btnSubmitRecord" value="" onclick ="checkAddOrEditRecord()">
+      </form>
+    </div>
+   </div>
+
+   <!--Graph Page -->
+  <div data-role="page" id="pageGraph" class="test">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Analyze</h1>
+    </div>
+    <div class="panel panel-success">
+      
+      <div class="panel-heading">
+        <h3 class="panel-title">Expense vs Date</h3>
+      </div>
+      
+      <div class="panel-body">
+        <canvas id="GraphCanvas" width="500" height="500" style="border:1px solid #000000;">
+        </canvas>
+      
+      </div>
+    </div>
+  </div>
+
+  <!--Suggestion Page -->
+  <div data-role="page" id="pageAdvice">
+    <div data-role="header">
+        <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+        <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+        <h1>Suggestions</h1>
+    </div>
+    
+    <div data-role="content">
+      <canvas id="AdviceCanvas" width="550" height="550" style="border:1px solid #000000;">
+      </canvas>
+    </div>
+  </div
+
+
+
+   </body>
+</html>

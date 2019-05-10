@@ -1,0 +1,71 @@
+<html>
+<head>
+<!-- CSS -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- JQ -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+<script>
+    //for bypassing the chrome error
+    $(document).bind('mobileinit', function () {
+        $.mobile.pushStateEnabled = false;
+    });
+</script>
+
+<!-- JQM -->
+<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+</head>
+<body>
+
+<!--User Information Page/Form -->
+  <!--Header of the Page -->
+  <div data-role="page" id="pageUserInfo">
+    <div data-role="header">
+      <a href="#pageHome" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Profile</h1>
+    </div>
+      <!-- Content for the User Information -->
+    <div data-role="content">
+      <form id="frmSignForm" action="">
+        <div data-role="fieldcontain">
+          <label for="pageuserFirstName">First Name: </label>
+          <input type="text" placeholder="Caner" name="pageuserFirstName" data-mini="false" id="pageuserFirstName" value="" required>
+        </div>
+        <div data-role="fieldcontain">
+          <label for="pageuserLastName">Last Name: </label>
+          <input type="text" placeholder="Irfanoglu" name="pageuserLastName" data-mini="false" id="pageuserLastName" value="" required>
+        </div>
+        <div data-role="fieldcontain">
+            <label for="dateOfBirth">Date: </label>
+            <input type="date" name="dateOfBirth" data-mini="false" id="dateOfBirth" value="2019-03-09">
+        </div>
+        <div data-role="fieldcontain">
+          <label for="confirmPassword">Edit Password: </label>
+          <input type="password" placeholder="Confirm Password" name="confirmPassword" data-mini="false" id="confirmPassword" value="0000" required>
+        </div>
+        <div data-role="fieldcontain">
+          <label for="pageuseremailId">Email Id: </label>
+          <input type="text" placeholder="canerirfanoglu@gmail.com" name="pageuseremailId" data-mini="false" id="pageuseremailId" value="" required>
+        </div>
+        <div data-role="fieldcontain">
+          <label for="pageusergenderType" class="select">Gender: </label>
+          <select name="pageusergenderType" id="pageusergenderType" data-mini="false"
+          data-native-menu="false" required>
+            <option value="Male">Male</option>
+            <option>Choose Gender</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <input type="submit" id="btnUserAdd" data-icon="check" data-iconpos="left" value="Update" data-inline="true" onclick="saveSignUpUser()">
+      </form>
+    </div>
+  </div>
+
+
+
+</body>
+</html>

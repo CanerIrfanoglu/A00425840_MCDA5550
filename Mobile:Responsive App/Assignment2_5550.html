@@ -1,0 +1,81 @@
+<html>
+<head>
+<!-- CSS -->
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+
+<!-- JS -->
+        <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
+<script>
+	function draw() {	
+  		var min = Number(document.getElementById("min").value);
+		var max = Number(document.getElementById("max").value);
+
+		var dataTable = document.getElementById('data');	
+		dataTable.innerHTML = ''
+		//Empty table 
+
+		var row=dataTable.insertRow(0); 
+		var nCell=row.insertCell(0); 
+		var n2Cell=row.insertCell(1); 
+		nCell.innerHTML='N'; n2Cell.innerHTML='N²'; 
+		//Header rows appended
+
+		var n = [];
+		var n2 = [];
+		//Initiate empty list to append values
+
+		var counter = 0;
+		//counter created for accessing list indices
+		for(var i=min; i<=max; i+=5) {
+			n.push(i);
+			n2.push(i*i);
+			//appending values to lists
+			
+			var row=dataTable.insertRow(-1);
+			var nCell=row.insertCell(0);
+			var n2Cell=row.insertCell(1);
+			//adding rows and cells to table
+			
+			nCell.innerHTML= n[counter]; 
+			n2Cell.innerHTML= n2[counter];
+			//updating the cell values
+
+			counter = counter + 1;
+		}		}
+	}
+</script>
+
+<body>
+<div data-role="page">
+	<div data-role="header" data-id="persistent" data-position="fixed">
+        	<h1>Arrays and Tables</h1>
+	</div>
+
+	<div data-role="content">
+		<label for="min">Min:</label>
+		<input type='number' name='min' id='min' placeholder='0'>
+		<label for="max">Max:</label>
+		<input type='number' name='max' id='max' placeholder='0'>
+		<br>
+		<br>
+		<br>
+
+    	<button onclick ="draw();">draw</button>
+		<br>
+		<br>
+	 	<table id="data">
+			<tr>
+			<td></td>
+			<td id='resultDisplay'>0</td>
+			</tr>
+		</table>	
+		</div>
+	<div data-role = footer data-id="persistent" data-position="fixed">
+		<h1>Arrays and Tables | Caner Irfanoglu </h1>
+	</div>
+	
+</div>
+</head>
+</html>
+

@@ -1,0 +1,43 @@
+<html>
+<head>
+<!-- CSS -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- JQ -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+<script>
+    //for bypassing the chrome error
+    $(document).bind('mobileinit', function () {
+        $.mobile.pushStateEnabled = false;
+    });
+</script>
+
+<!-- JQM -->
+<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+</head>
+<body>
+
+ <!-- Menu page -->
+  <div data-role="page" id="pageMenu">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Learning Tracker</h1>
+    </div>
+    <div data-role="content">
+      <div data-role="controlgroup">
+        <a href="#pageUserInfo" data-role="button">Profile</a>
+        <a href="#pageRecords" data-role="button">Records</a>
+        <a href="#pageGraph" data-role="button">Graph</a>
+        <a href="#pageAdvice" data-role="button">Suggestions</a>
+      </div>
+    </div>
+  </div>
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,834 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="src/jquery.mobile-1.0.1.min.css" rel="stylesheet"/>
+<script src="src/jquery-1.6.4.min.js"></script>
+<script src="src/jquery.mobile-1.0.1.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="src/bootstrap.js" ></script>
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css">/script>
+
+<script src="src/RGraph.common.core.js"></script>
+<script src="src/RGraph.common.dynamic.js"></script>
+<script src="src/RGraph.common.effects.js"></script>
+<script src="src/RGraph.cornergauge.js"></script>
+<script src="src/RGraph.hprogress.js"></script>
+<script src="src/RGraph.line.js"></script>
+<script src="src/RGraph.svg.common.core.js" ></script>
+<script src="src/RGraph.svg.line.js" ></script>
+<title>Learning Tracker </title>
+
+<script>
+$(function(){
+    $('div[onload]').trigger('onload');
+});
+function addValueToPassword(button) {
+    var currVal = $("#passcode").val();
+    if (button === "bksp") {
+        $("#passcode").val(currVal.substring(0, currVal.length - 1));
+    } else {
+        $("#passcode").val(currVal.concat(button));
+    }
+}
+function redirectPage(){
+	var user = localStorage.getItem("user");
+	if (user == null) {
+		//no record whatsoever, let the user know
+		alert("No record found");
+		return;
+	} else {
+                //if data exist, convert to JSON object
+                user = JSON.parse(user);
+	}
+	var userName = user.Email;
+	var password =  user.Newpassword;
+//if the password matches
+    if (document.getElementById("passcode").value === password && document.getElementById("username").value === userName )
+    {
+        //if not agreed yet
+        if (localStorage.getItem("agreedToLegal") === null) 
+       {
+            $("#btnEnter").attr("href","disclaimer.html").button();
+        } 
+        else if (localStorage.getItem("agreedToLegal") === "true") 
+        {
+               $("#btnEnter").attr("href","#pageMenu").button();
+        }
+    } else {
+        alert("Incorrect username/password, please try again.");
+    }
+
+
+}
+function saveSignUpUser(){ 
+	if(!($("#confirmPassword").val() === $("#addPassword").val())){
+		alert("New Password and Confirm Password should match!");
+		return;
+	}
+	var user = { 
+	"FirstName" :  $("#signupFirstName").val(),
+	"LastName"  :  $("#signupLastName").val(), 
+	"DateOfBirth": $("#dateOfBirth").val(), 
+	"Email" :  $("#email").val(), 
+	"Newpassword": $("#confirmPassword").val() , 
+	"Gender" : $("#signgenderType :selected").val()
+	}; 
+	try { 
+		localStorage.setItem("user",JSON.stringify(user)); 
+		alert("Saving Information");
+///		window.location.href = "disclaimer.html";
+		window.location.href = "#legalNotice";
+		window.location.reload();
+		//$.mobile.changePage("disclaimer.html");
+		//window.location.reload(); 
+	}catch(e){
+		if(window.navigator.vendor ==="Goog1e Inc."){
+			if(e == DOMException.QUOTA_EXCEEDED_ERR) {
+				alert("Error: Local Storage limit exceeds.");
+			}
+		}else if (e == DOMException.QUOTA_EXCEEDED_ERR) {
+			alert("Error :Saving to local storage.");
+		}
+		console.log(e);
+	}
+}
+
+function saveDisclaimer(){
+	localStorage.setItem("agreedToLegal","true");
+	window.location.href = "#pageMenu";
+	window.location.reload();
+}
+
+function saveUserForm(){ 
+	var user = { 
+	"FirstName" :  $("#signupFirstName1").val(),
+	"LastName"  :  $("#signupLastName1").val(), 
+	"DateOfBirth": $("#dateOfBirth1").val(), 
+	"Email" :  $("#email1").val(), 
+	"Newpassword": $("#confirmPassword1").val() , 
+	"Gender" : $("#signgenderType1 :selected").val()
+	}; 
+	try { 
+		localStorage.setItem("user",JSON.stringify(user)); 
+		alert("Saving Information");
+		window.location.reload(); 
+	}catch(e){
+		if(window.navigator.vendor ==="Goog1e Inc."){
+			if(e == DOMException.QUOTA_EXCEEDED_ERR) {
+				alert("Error: Local Storage limit exceeds.");
+			}
+		}else if (e == DOMException.QUOTA_EXCEEDED_ERR) {
+			alert("Error :Saving to local storage.");
+		}
+		console.log(e);
+	}
+}
+function loadProfile(){ 
+	var user = localStorage.getItem("user");
+	if (user == null) {
+		//no record whatsoever, let the user know
+		alert("No record found");
+		return;
+	} else {
+                //if data exist, convert to JSON object
+                user = JSON.parse(user);
+	}
+	$("#signupFirstName1").val(user.FirstName);
+    $("#signupLastName1").val(user.LastName);
+    $("#dateOfBirth1").val(user.DateOfBirth);
+    $("#email1").val(user.Email);
+    $("#confirmPassword1").val(user.Newpassword);
+    $("#addPassword1").val(user.Newpassword);
+    $("#signgenderType1").val(user.Gender);
+	$("#signgenderType1").selectmenu('refresh',true);
+}
+
+function loadProfileInfo() {
+	try	{
+		$("#btnSubmitRecord").val('Edit Record').button("refresh");
+	} catch(ex){
+		alert('Button Error' + ex);
+	}
+	var user = localStorage.getItem("user");
+	if (user == null) {
+		//no record whatsoever, let the user know
+		alert("No record found");
+		return;
+	} else {
+                //if data exist, convert to JSON object
+                user = JSON.parse(user);
+	}
+	$("#usernametd").html(user.FirstName + ' ' + user.LastName);
+	$("#dob").html(user.DateOfBirth);
+	$("#emailtd").html(user.Email);
+	$("#password").html(user.Newpassword);
+	$("#gender").html(user.Gender);
+
+var learingHistory = localStorage.getItem("tbRecords");
+	if (learingHistory != null) {
+		learning = JSON.parse(learingHistory);
+		var dataTable = document.getElementById('learningHistory');
+		dataTable.innerHTML = '';
+
+		var row=dataTable.insertRow(0);
+		var c1=row.insertCell(0);
+		var c2=row.insertCell(1);
+		var c3=row.insertCell(2);
+		var c4=row.insertCell(3);
+		var c5=row.insertCell(4);
+
+		c1.innerHTML='Date';
+		c2.innerHTML='Learning Type';
+		c3.innerHTML='Learning Rate';
+		c4.innerHTML='Edit';
+		c5.innerHTML='Delete';
+
+		for(var i = 0; i <= learning.length; i++)
+		{
+			var row = dataTable.insertRow(-1);
+
+			var n1= row.insertCell(0);
+			var n2= row.insertCell(1);
+			var n3= row.insertCell(2);
+			var n4= row.insertCell(3);
+			var n5= row.insertCell(4);
+			
+			n1.innerHTML = learning[i].LearningDate;
+			n2.innerHTML = learning[i].LearningType;
+			n3.innerHTML = learning[i].Amount;
+			
+			n4.innerHTML = '<a data-inline="true" data-mini="true" data-role="button" href="#pageEditRecordForm" onclick="editRecord(' + i + ')" data-icon="edit" data-iconpos="notext" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" title="" class="ui-btn ui-shadow ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-notext ui-btn-up-c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-edit ui-icon-shadow">&nbsp;</span></span></a>';
+			n5.innerHTML = '<a data-inline="true" data-mini="true" data-role="button" href="#pageNewRecordForm" onclick="deleteRecord(' + i + ')" data-icon="delete" data-iconpos="notext" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" title="" class="ui-btn ui-shadow ui-btn-corner-all ui-mini ui-btn-inline ui-btn-icon-notext ui-btn-up-c"><span class="ui-btn-inner"><span class="ui-btn-text"></span><span class="ui-icon ui-icon-delete ui-icon-shadow">&nbsp;</span></span></a>';			
+		}
+	}	
+}
+function editRecord(index) {
+	$("#hidRowNum").val(index);
+	var learningHistory = localStorage.getItem("tbRecords");
+	if (learningHistory != null) {
+		learning = JSON.parse(learningHistory);
+		$("#editdatLearningDate").val(learning[index].LearningDate);
+		$("#edittxtType").val(learning[index].LearningType);
+		$("#edittxtAmount").val(learning[index].Amount);
+		window.location.href = "#editpageNewRecordForm";
+		//window.location.reload();
+	}
+}
+
+function deleteRecord(index){
+
+	var records = localStorage.getItem("tbRecords");
+
+	if (records == null) {
+		records = [];
+	}
+	else {
+		records = JSON.parse(records);		
+		records.splice(index,1);
+		localStorage.setItem("tbRecords", JSON.stringify(records));
+		window.location.href = "#pageRecords";
+		window.location.reload();
+	}
+}
+$("#btnAddRecord").click(function () {
+  /*.button("refresh") function forces jQuery
+   * Mobile to refresh the text on the button
+   */
+  $("#btnSubmitRecord").val("Add").button(
+    "refresh");
+});
+function AddNewRecord(){
+	window.location.href = "#pageNewRecordForm";
+	window.location.reload();
+}
+function checkAddOrEditRecord(action) {
+  if (action === "Add Record") {
+    addRecord();
+    window.location.href = "#pageRecords";
+	window.location.reload();
+  } else if (action === "Edit") {
+    updateRecord();
+    window.location.href = "#pageRecords";
+	window.location.reload();
+    $("#btnSubmitRecord").removeAttr("indexToEdit");
+  }
+  /*Must return false, or else submitting form
+   * results in reloading the page
+   */
+  return false;
+
+}
+function addRecord(){
+	var newObj = {
+		"LearningDate": $("#datLearningDate").val(),
+		"LearningType": $("#txtType").val(),
+		"Amount": $("#txtAmount").val()
+	};
+	var records = localStorage.getItem("tbRecords");
+
+	if (records == null) {
+		records = [];
+	}
+	else {
+		records = JSON.parse(records);
+	}
+	records.push(newObj);
+	localStorage.setItem("tbRecords", JSON.stringify(records));
+	window.location.href = "#pageRecords";
+	window.location.reload();
+}
+
+function updateRecord(){
+	var records = localStorage.getItem("tbRecords");
+
+	if (records == null) {
+		records = [];
+	}
+	else {
+		records = JSON.parse(records);
+	}
+	var index = +$("#hidRowNum").val();
+	records[index].LearningDate = $("#editdatLearningDate").val();
+	records[index].LearningType = $("#edittxtType").val();
+	records[index].Amount = $("#edittxtAmount").val();
+	localStorage.setItem("tbRecords", JSON.stringify(records));
+}
+function clearRecordHistory(){
+	localStorage.removeItem("tbRecords");
+	window.location.href = "#pageRecords";
+	window.location.reload();
+}
+function drawLines(learningArr,Datearr) {
+ myGraph = new RGraph.Line('GraphCanvas', learningArr);
+    myGraph.Set('chart.hmargin', 12);
+    myGraph.Set('chart.tickmarks', 'endcircle');
+    myGraph.Set('chart.labels', Datearr);
+    myGraph.Draw();
+
+
+    RGraph.Register(myGraph);
+    
+    myGraph.canvas.onmousemove = function (e)
+    {
+        RGraph.FixEventObject(e);
+
+        var canvas  = e.target;
+        var context = canvas.getContext('2d');
+        var obj     = e.target.__object__;
+      
+        // This is the method which simplifies getting coordinates
+        var point = obj.getShape(e);
+      
+      
+        if (point) {
+            
+            canvas.style.cursor = 'pointer';
+            
+            // Is this the same tooltip as the one (if any) that's already being shown
+            if (RGraph.Registry.Get('chart.tooltip') && RGraph.Registry.Get('chart.tooltip').__index__ == point[3]) {
+                return;
+            }
+
+            // Start afresh
+            RGraph.Redraw();
+
+            // Show the tooltip
+            RGraph.Tooltip(canvas, obj.Get('chart.labels')[point[3]], e.pageX, e.pageY, point[3]);
+
+            // Highlight the point
+            context.strokeStyle = 'gray';
+            context.fillStyle = 'white';
+            context.beginPath();
+            context.moveTo(point[1], point[2]);
+            context.arc(point[1], point[2], 2, 0, 6.26, 0);
+            context.stroke();
+            context.fill();
+            
+            return;
+        }
+        
+        canvas.style.cursor = 'default';
+    }
+}
+function draw(){
+	var ctx = document.getElementById("GraphCanvas");
+	ctx.width  = window.innerWidth-100;
+	ctx.height = window.innerHeight-200;
+	var records = localStorage.getItem("tbRecords");
+	records = JSON.parse(records);
+	var Datearr = new Array();
+	var learningArr = new Array();
+	for(var i = 0; i < records.length;i++){
+		learningArr[i] = +records[i].Amount;
+		Datearr[i] = records[i].LearningDate;
+	}
+	drawLines(learningArr,Datearr);
+}
+function getLearninRate(){
+	var tbRecords = JSON.parse(localStorage.getItem("tbRecords"));
+	var learning = 0;
+	for(var i=0; i<tbRecords.length;i++) {
+	  learning += +parseInt(tbRecords[i].Amount)
+	}
+	return learning;
+}
+function adviceCanvas() {
+        var canvas = document.getElementById("AdviceCanvas");
+        var ctx = canvas.getContext("2d");
+		var learningRate = getLearninRate();
+        canvas.width  = window.innerWidth-100;
+		canvas.height = window.innerHeight-200;
+        ctx.font = "22px Arial";
+        ctx.fillStyle = "black";
+        ctx.fillText("Your current learnin is " + learningRate +  ".", 25, 320);
+
+          ctx.fillText(
+            "Your target Learning Rate range is: 300-400",  25, 350);
+          levelwrite(ctx, learningRate);
+          levelMeter(ctx, learningRate);
+      }
+
+    //For deciding what to write for given values
+      function levelwrite(ctx, learningRate) {
+        if ((learningRate >= 1) && (learningRate <= 100)) {
+          writeAdvice(ctx, "green");
+        } else if ((learningRate > 100) && (learningRate <= 200)) {
+          writeAdvice(ctx, "yellow");
+        } else {
+          writeAdvice(ctx, "red");
+        }
+      }
+
+
+      function writeAdvice(ctx, level) {
+          var adviceLine1 = "";
+          var adviceLine2 = "";
+
+          if (level == "red") {
+            adviceLine1 = "Please take care of the learning.";
+            adviceLine2 = "Its exceeding more than set limit.";
+          } else if (level == "yellow") {
+            adviceLine1 = "The learning needs to be checked!!";
+          } else if (level = "green") {
+            adviceLine1 =
+              "Your learning are on track .";
+          }
+          ctx.fillText("Your Learning is " + level +
+            ".", 25, 380);
+          ctx.fillText(adviceLine1, 25, 410);
+          ctx.fillText(adviceLine2, 25, 440);
+        }
+
+
+      function levelMeter(ctx, learning) {
+
+        
+
+        if (learning <= 100) {
+          var cg = new RGraph.CornerGauge(
+              "AdviceCanvas", 0, 300, learning)
+            cg.Set("chart.colors.ranges", [
+              [200, 300, "red"],
+              [100, 200, "yellow"],
+              [1, 100, "#0f0"]
+            ]);
+        } else {
+          var cg = new RGraph.CornerGauge(
+              "AdviceCanvas", 0, learning, learning)
+            cg.Set("chart.colors.ranges", [
+              [200, 300, "red"],
+              [100, 200, "yellow"],
+              [0.01, 0.1, "#0f0"],
+              [100.01, learning, "red"]
+            ]);
+        }
+        drawMeter(cg);
+      }
+
+      // Meter properties
+      function drawMeter(g) {
+           g.Set("chart.value.text.units.post", " CAD")
+          g.Set("chart.value.text.boxed", false)
+          g.Set("chart.value.text.size", 14)
+          g.Set("chart.value.text.font", "Verdana")
+          g.Set("chart.value.text.bold", true)
+          g.Set("chart.value.text.decimals", 2)
+          g.Set("chart.shadow.offsetx", 5)
+          g.Set("chart.shadow.offsety", 5)
+          g.Set("chart.scale.decimals", 2)
+          g.Set("chart.title", "Learning Limit")
+          g.Set("chart.radius", 250)
+          g.Set("chart.centerx", 50)
+          g.Set("chart.centery", 250)
+          g.Draw();
+      }
+	  $("#AdviceCanvas").click(function () {
+
+            
+            //recall the start function
+            adviceCanvas();
+        });
+</script>
+
+</head>
+
+<body>
+<!-- Start of first page -->
+  <div data-role="page" id="pageHome">
+    <div data-role="header">
+      <h1>Learning Tracker</h1>
+    </div>
+    <div data-role="content">
+      Username:
+      <input type="text" id="username">
+      Password :
+      <input type="password" id="passcode">
+
+      <div data-role="controlgroup" id="numKeyPad">
+        <a data-role="button" id="btnEnter" onclick="redirectPage()">Login</a>
+        <a href="#pageAbout" data-role="button">About</a>
+        <a href="#pageSignup" data-role="button">New User? Please sign up</a>
+      </div>
+      
+      <div data-role="controlgroup" data-type="horizontal">
+        <a data-role="button" onclick="addValueToPassword(7)">7</a>
+        <a data-role="button" onclick="addValueToPassword(8)">8</a>
+        <a data-role="button" onclick="addValueToPassword(9)">9</a>
+      </div>
+      <div data-role="controlgroup" data-type="horizontal">
+        <a data-role="button" onclick="addValueToPassword(4)">4</a>
+        <a data-role="button" onclick="addValueToPassword(5)">5</a>
+        <a data-role="button" onclick="addValueToPassword(6)">6</a>
+      </div>
+      <div data-role="controlgroup" data-type="horizontal">
+        <a data-role="button" onclick="addValueToPassword(1)">1</a>
+        <a data-role="button" onclick="addValueToPassword(2)">2</a>
+        <a data-role="button" onclick="addValueToPassword(3)">3</a>
+      </div>
+      <div data-role="controlgroup" data-type="horizontal">
+        <a data-role="button" onclick="addValueToPassword(0)">0</a>
+        <a data-role="button" onclick="addValueToPassword('bksp')" data-icon="delete">del</a>
+      </div>
+    </div>
+  </div>
+
+  <!--About Page -->
+  <div data-role="page" id="pageAbout">
+    <div data-role="header">
+      <a href="#pageHome" data-role="button" data-icon="bars" data-iconpos="left">Home</a>
+      <h1>Info</h1>
+    </div>
+    <div data-role="content">
+      <h1>Learning Tracker</h1>
+      <h4>Every Penny Matters!</h4><br>
+      <h4>It really is important to keep track of how you are spending your money.
+      It is the first step to understanding how you are managing your money, and to taking control of your finances. 
+      It may seem like a lot of work when you first begin, but you can make it as simple or complicated as you want to. Tracking your Learning can help you stop feeling like you have little to show for your hard work. 
+      </h4><br><br><br>
+      <h5><b>Designed and Developed by Sunil Padikar M.</b></h5>
+    </div>
+  </div>
+
+
+  <!--Sign Up Page/Form -->
+ <!--Header of the Page -->
+  <div data-role="page" id="pageSignup">
+    <div data-role="header">
+      <a href="#pageHome" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Profile</h1>
+    </div>
+      <!-- Content for the User Information -->
+    <div data-role="content">
+      <form id="frmSignForm" action="">
+        <div data-role="fieldcontain">
+          <label for="signupFirstName">First Name: </label>
+          <input type="text" placeholder="First Name" name="signupFirstName" data-mini="false" id="signupFirstName"  required>
+        </div>
+        <div data-role="fieldcontain">
+          <label for="signupLastName">Last Name: </label>
+          <input type="text" placeholder="Last Name" name="signupLastName" data-mini="false" id="signupLastName"  required>
+        </div>
+		<div data-role="fieldcontain">
+          <label for="email">Email: </label>
+          <input type="email" placeholder="Email" name="email" data-mini="false" id="email"  required>
+        </div>
+        <div data-role="fieldcontain">
+            <label for="dateOfBirth">Date: </label>
+            <input type="date" name="dateOfBirth" data-mini="false" id="dateOfBirth" >
+        </div>
+        <div data-role="fieldcontain">
+          <label for="addPassword">New Password: </label>
+          <input type="password" placeholder="New Password" name="addPassword" data-mini="false" id="addPassword"  required>
+        </div>
+        <div data-role="fieldcontain">
+          <label for="confirmPassword">Confirm Password: </label>
+          <input type="password" placeholder="Confirm Password" name="confirmPassword" data-mini="false" id="confirmPassword"  required>
+        </div>
+        <div data-role="fieldcontain">
+          <label for="signgenderType" class="select">Gender: </label>
+          <select name="signgenderType" id="signgenderType" data-mini="false"
+          data-native-menu="false" required>
+            <option>Choose Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <input type="submit" id="btnUserAdd" data-icon="check" data-iconpos="left" value="Sign Up!" data-inline="true" onclick="saveSignUpUser()"/>
+      </form>
+    </div>
+  </div>
+
+   <!--Disclaimer Page -->
+  <div data-role="page" id="legalNotice" data-close-btn="none">
+  <div data-role="header" >
+  <h1>Disclaimer</h1>
+  </div>
+  <div data-role="content">
+  We use some information on your profile to give best service! Please agree to continue.
+  <br>
+  <a href="#pageMenu" id="noticeYes" data-role="button" data-icon ="forward" data-mini ="false" onclick="saveDisclaimer()">Yes</a>
+  </div>
+  </div>
+
+  <!--User Information Page/Form -->
+  <!--Header of the Page -->
+  <div onload="loadProfile()" data-role="page" id="pageUserInfo">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Profile</h1>
+    </div>
+      <!-- Content for the User Information -->
+    <div data-role="content">
+      <form id="frmSignForm" action="">
+        <div data-role="fieldcontain">
+          <label for="signupFirstName1">First Name: </label>
+          <input type="text" placeholder="First Name" name="signupFirstName1" data-mini="false" id="signupFirstName1"  required>
+        </div>
+        <div data-role="fieldcontain">
+          <label for="signupLastName1">Last Name: </label>
+          <input type="text" placeholder="Last Name" name="signupLastName1" data-mini="false" id="signupLastName1"  required>
+        </div>
+		<div data-role="fieldcontain">
+          <label for="email">Email: </label>
+          <input type="email" placeholder="Email" name="email1" data-mini="false" id="email1"  required>
+        </div>
+        <div data-role="fieldcontain">
+            <label for="dateOfBirth1">Date: </label>
+            <input type="date" name="dateOfBirth1" data-mini="false" id="dateOfBirth1" >
+        </div>
+        <div data-role="fieldcontain">
+          <label for="addPassword1">New Password: </label>
+          <input type="password" placeholder="New Password" name="addPassword1" data-mini="false" id="addPassword1"  required>
+        </div>
+        <div data-role="fieldcontain">
+          <label for="confirmPassword1">Confirm Password: </label>
+          <input type="password" placeholder="Confirm Password" name="confirmPassword1" data-mini="false" id="confirmPassword1"  required>
+        </div>
+        <div data-role="fieldcontain">
+          <label for="signgenderType1" class="select">Gender: </label>
+          <select name="signgenderType1" id="signgenderType1" data-mini="false"
+          data-native-menu="false" required>
+            <option>Choose Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <input type="submit" id="btnUserUpdate" data-icon="check" data-iconpos="left" value="Update" data-inline="true" onclick="saveUserForm()">
+      </form>
+    </div>
+  </div>    
+
+  <!-- Menu page -->
+  <div data-role="page" id="pageMenu">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Learning Tracker</h1>
+    </div>
+    <div data-role="content">
+      <div data-role="controlgroup">
+        <a href="#pageUserInfo" data-role="button">Profile</a>
+        <a href="#pageRecords" data-role="button">Records</a>
+        <a href="#pageGraph" data-role="button">Graph</a>
+        <a href="#pageAdvice" data-role="button">Suggestions</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Records page -->
+  <div data-role="page" id="pageRecords" onload="loadProfileInfo()">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Records</h1>
+    </div>
+   <div data-role="content">
+      <!-- User's Information Section -->
+      <div data-role="fieldcontain" id="divUserSection">
+      </div>
+      <h3 align="center">Learning History</h3>
+      <div data-role="fieldcontain">
+        <!-- Records Table -->
+        <table id="tblRecords" class="ui-responsive table-stroke">
+		<tr>
+			<td>
+				User's Name:
+			</td>
+			<td id="usernametd">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Date Of Birth:
+			</td>
+			<td id="dob">
+			</td>
+		</tr>
+		<tr >
+			<td>
+				Email:
+			</td>
+			<td id="emailtd">
+			</td>
+		</tr>
+		<tr>
+			<td>
+			Password:
+			</td>
+			<td id="password">
+			</td>
+		</tr>
+		<tr>
+			<td>
+			Gender:
+			</td>
+			<td id="gender">
+			</td>
+		</tr>
+		<tr>
+		<td>
+			<a data-icon="ui-icon ui-icon-edit" data-role="button"  href="#pageUserInfo">Edit Profile</a>
+		</td>
+		</tr>
+        </table>
+      </div>
+      <div data-role="fieldcontain">
+		<center><h1>Learning History</h1>
+			<table  id="learningHistory" class="ui-responsive table-stroke" cellpadding="10">
+			
+			</table>
+		</center>
+        <a href="#" id="btnAddRecord" data-role="button" data-icon="plus" onclick="AddNewRecord()">Add New Entry</a>
+        <a href="#" data-role="button" id="btnClearHistory" data-icon="delete" onclick="clearRecordHistory()">Clear History</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Record Form page -->
+  <div data-role="page" id="pageNewRecordForm">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+    <h1>New Record</h1>
+    </div>
+    <div data-role="content">
+      <form id="frmNewRecordForm" action="">
+        <div data-role="fieldcontain">
+          <div data-role="fieldcontain">
+            <label for="datLearningDate">Date: </label>
+            <input type="date" name="datLearningDate" data-mini="false" id="datLearningDate" >
+          </div> 
+         <div data-role="fieldcontain">
+            <label for="txtType"> Learning Type </label>          
+            <input type="text" name="txtType"
+            data-mini="false" id="txtType" >
+          </div>
+          <div data-role="fieldcontain">
+            <label for="txtAmount">Learning Rate : </label>
+            <input type="number"  placeholder="Learning rate" name="txtAmount"
+            data-mini="false" id="txtAmount" >
+          </div>
+        </div>
+        <input type="submit" id="btnSubmitRecord" value="Add Record" onclick ="checkAddOrEditRecord('Add Record')">
+      </form>
+    </div>
+  </div>
+  
+  <!-- Edit Record Form page -->
+  <div data-role="page" id="pageEditRecordForm">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+    <h1>New Record</h1>
+    </div>
+    <div data-role="content">
+      <form id="frmNewRecordForm" action="">
+        <div data-role="fieldcontain">
+          <div data-role="fieldcontain">
+            <label for="editdatLearningDate">Date: </label>
+            <input type="date" name="editdatLearningDate" data-mini="false" id="editdatLearningDate" >
+          </div> 
+         <div data-role="fieldcontain">
+            <label for="edittxtType"> Learning Type </label>          
+            <input type="text" name="edittxtType"
+            data-mini="false" id="edittxtType" >
+          </div>
+          <div data-role="fieldcontain">
+            <label for="edittxtAmount">Learning Rate : </label>
+            <input type="number"  placeholder="Learning rate" name="edittxtAmount"
+            data-mini="false" id="edittxtAmount" >
+          </div>
+        </div>
+        <input type="submit" id="editbtnSubmitRecord" value="Edit Record" onclick ="checkAddOrEditRecord('Edit')">
+        <input type="hidden" id="hidRowNum">
+      </form>
+    </div>
+  </div>
+
+  <!--Graph Page -->
+  <div data-role="page" id="pageGraph" class="test">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Analyze</h1>
+    </div>
+	
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <h3 class="panel-title">Learning vs Date</h3>
+      </div>
+      <div class="panel-body" onload="draw()">
+        <canvas id="GraphCanvas" style="border:1px solid #000000;">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+  <!--Suggestion Page -->
+  <div data-role="page" id="pageAdvice">
+    <div data-role="header">
+        <a href="#pageMenu" data-role="button" data-icon="bars"
+      data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info"
+      data-iconpos="right" data-inline="true">Info</a>
+      <h1>Suggestions</h1>
+    </div>
+    <div data-role="content" onload="adviceCanvas()">
+      <canvas id="AdviceCanvas" style="border:1px solid #000000;">
+      </canvas>
+    </div>
+  </div>
+<form>
+
+  
+</body>
+
+</html>
+
+

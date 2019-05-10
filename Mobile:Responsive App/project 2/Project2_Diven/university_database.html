@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title> University Database </title>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
+	
+
+		<script type="text/javascript" src="client_node.js"> </script>
+</head>
+<body>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0>
+	<div data-role="page">
+		<div data-role = header> <center> University Database </center> </div>
+		
+	
+		<form>
+		<div data-role="content">
+			<label for="name">Name:</label>
+			<input id="name" type="text" required>
+			<label for="address">Address:</label>
+			<input id="address" type="text" required>
+			<label for="phone">Phone:</label>
+			<input id="phone" type="tel" required>
+			<input type="submit" onclick="Save()" id="saveButton" value="Save">
+			<br>
+			<br>
+		</div>
+		</form>
+
+		    <div class="">
+      <label for="search:"> Search:</label>
+      <input type='text' name='search' id="searchKey" placeholder='Enter Name of University you want to search'>
+    <center>
+          <button onclick="search()"> Search </button>
+      </center>
+      </div>
+
+			<div class="">
+			<label for="Delete:"> Delete:</label>
+			<input type='text' name='delete' id="deleteKey" placeholder='Enter Name of University you want to delete'>
+			<center>
+					<button onclick="dlt()"> Delete </button>
+			</center>
+			</div>
+			<table id="all_data">
+                </table>
+		</div>
+		<div data-role = footer>
+			<small> <center> Cross-platform mobile app demo.</center></small>
+		</div>
+	
+</body>
+</html>
+

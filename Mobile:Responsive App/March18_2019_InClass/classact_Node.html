@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title> square </title>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
+	<script type="text/javascript" src = 'Node_client.js'></script>
+
+</head>
+<body>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0>
+	<div data-role="page">
+		<div data-role = header data-id = "persistent" data-position = "fixed"> <center> Add Numbers </center> </div>
+		<div data-role="content">
+			<label for="Num1">Num1</label>
+			<input type='number' name='Num1' id="Num1" placeholder='Number 1'>
+			<br>
+			<label for="Num2">Num2</label>
+			<input type='number' name='Num2' id="Num2" placeholder='Number 2'>
+			<button onclick="saveNumbers()">Save Sum</button>
+			<button onclick="getResult()">Get Result </button>
+
+
+			<table id="data">
+				<tr>
+					<td> Answer:</td>
+					<td id='result'>0</td>
+					<br>
+				</tr>
+			</table>
+
+		</div>
+	</div>
+</body>

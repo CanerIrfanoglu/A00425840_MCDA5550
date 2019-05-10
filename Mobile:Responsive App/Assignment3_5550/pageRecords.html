@@ -1,0 +1,58 @@
+<html>
+<head>
+<!-- CSS -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- JQ -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+<script>
+    //for bypassing the chrome error
+    $(document).bind('mobileinit', function () {
+        $.mobile.pushStateEnabled = false;
+    });
+</script>
+
+<!-- JQM -->
+<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+</head>
+<body>
+
+ <!-- Records page -->
+  <div data-role="page" id="pageRecords">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+      <h1>Records</h1>
+    </div>
+      <br>
+      <h4>User's Name:Caner Irfanoglu</h4>
+      <h4>Date: 2019-03-09</h4>
+      <h4>Email: canerirfanoglu@gmail.com</h4>
+      <h4>New Password: 0000</h4>
+      <h4>Gender: Male</h4>
+
+      <input type="submit" id="btnUserAdd" data-icon="edit" data-iconpos="left" value="Edit Profile" data-inline="true" onclick="saveSignUpUser()">
+
+   <div data-role="content">
+      <!-- User's Information Section -->
+      <div data-role="fieldcontain" id="divUserSection">
+      </div>
+      <h3 align="center">Learning History</h3>
+      <div data-role="fieldcontain">
+        <!-- Records Table -->
+        <table id="tblRecords" class="ui-responsive table-stroke">
+        
+        </table>
+      </div>
+      <div data-role="fieldcontain">
+        <a href="#pageNewRecordForm" id="btnAddRecord" data-role="button" data-icon="plus" onclick="AddNewRecord()">Add New Entry</a>
+        <a href="#" data-role="button" id="btnClearHistory" data-icon="delete" onclick="clearRecordHistory()">Clear History</a>
+      </div>
+    </div>
+  </div>
+
+
+</body>
+</html>

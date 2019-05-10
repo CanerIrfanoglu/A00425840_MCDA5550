@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+
+
+<html>
+    <head>
+        <title>MCDA 5550 Angular JS Table</title>
+        <meta charset="UTF-8">
+        <script src = "https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 80%;
+            }
+
+            th, td {
+                text-align: left;
+                padding: 6px;
+            }
+
+            tr:nth-child(even) {background-color: #D83411;}
+            tr:nth-child(odd) {background-color: #733A2E;}
+
+        </style>
+
+    </head>
+
+    <body bgcolor=#3B732E>
+        <h1 style="color:#0F255B;">Go Cart Application!!!</h1>
+
+        <div ng-app="myApp" ng-controller="myCtrl" ng-init="
+             carts =  [
+            {item:'Apple',price:'5.08',weight:1.5}, 
+            {item:'Orange', price:'3.18', weight:1},
+            {item:'Blueberry', price:'7.11', weight:3.2},
+            {item:'Strawberry', price:'9.09', weight:4.5},
+            {item:'Pinapple', price:'4.99',weight:1.3}]">
+
+            <TABLE BORDER="1" align="center" width="100px">
+                <TR>
+                    <TD>Department: </TD>
+                    <TD>
+                        <input type="text" ng-model="departmentName">
+                    </TD>
+                </TR>
+                <TR>
+                    <TD>Section: </TD>
+                    <TD><input type="text" ng-model="sectionName"></TD>
+                </TR>
+                <TR>
+                    <TD>Portfolio: </TD>
+                    <TD> &nbsp; #34567 {{departmentName + " " + sectionName}}</TD>
+                </TR>
+
+                <TR>
+                    <TD>Stock: </TD>
+                    <TD>
+                        <table border="1">
+                            <tr>
+                                <td>Items</td>
+                                <td>Price(CAD)</td>
+                                <td>Weight(KGS)</td>
+                            </tr>
+                            <tr ng-repeat="cart in carts">
+                                <td>{{ cart.item}}</td>
+                                <td>{{ cart.price}}</td>
+                                <td>{{ cart.weight}}</td>
+                            </tr>
+                        </table>
+
+                    </TD>
+                </TR>
+            </TABLE>
+        </div>
+
+        <script>
+            var app = angular.module('myApp', []);
+            app.controller('myCtrl', function ($scope) {
+            $scope.departmentName = "Fruits";
+            $scope.sectionName = "Eatables";
+            });
+        </script>
+
+        <div data-role = footer data-id ="persistent" data-position="fixed">
+            <h3>Developed by Caner </h3>
+        </div>
+    </body>
+
+</html>

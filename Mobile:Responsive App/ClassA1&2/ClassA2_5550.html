@@ -1,0 +1,70 @@
+<html>
+<head>
+<!-- CSS -->
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+
+<!-- JS -->
+        <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
+
+<script>
+	function display() {
+  		var angle = document.getElementById("angle").value;
+		var velocity = document.getElementById("velocity").value;
+		
+		document.getElementById("angleDisplay").innerHTML = angle;
+		document.getElementById("velocityDisplay").innerHTML = velocity;
+}
+
+
+
+</script>
+
+<body>
+<div data-role="page">
+	<div data-role="header" data-id="persistent" data-position="fixed">
+        	<h1>Physics Simulator App</h1>
+	</div>
+	
+	<div data-role="navbar">
+		<ul>
+			<li><a href="index.html" >Information</a></li>
+			<li><a href="interface.html" class="ui-btn-active ui-state-persist"
+			>Interface</a></li>
+		</ul>
+	</div>
+
+	<div data-role="content">
+		<label for="angle">Angle:</label>
+		<input type='number' name='angle' id='angle' min='0' max='90' placeholder='In degrees'>
+		<label for="velocity">Velocity:</label>
+		<input type='number' name='velocity' id='velocity' min='0' max='299792458' placeholder='In metres/second'>
+		<br>
+		<br>
+		<br>
+		<button onclick="display();">Display</button>
+		
+		<br>
+		<br>
+	 	<table id="data">
+			<tr>
+			<td>Angle Entered:</td>
+			<td id='angleDisplay'>0</td>
+			<td>degrees</td>
+			</tr>
+			<tr>
+			<td>Velocity Entered:</td>
+			<td id='velocityDisplay'>0</td>
+			<td>meters/second</td>
+			</tr>
+		</table>	
+		</div>
+	
+	<div data-role = footer data-id="persistent" data-position="fixed">
+		<h1>Cross-platform mobile app demo | 27th Feb</h1>
+	</div>
+	</div>
+</body>
+</head>
+</html>
+

@@ -1,0 +1,72 @@
+<html>
+<head>
+<!-- CSS -->
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.css" />
+
+<!-- JS -->
+        <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+        <script src="http://code.jquery.com/mobile/1.0.1/jquery.mobile-1.0.1.min.js"></script>
+<script>
+	function sumdisplay() {	
+  		var number1 = Number(document.getElementById("number1").value);
+		var number2 = Number(document.getElementById("number2").value);	
+		document.getElementById("resultDisplay").innerHTML = number1 + number2;
+}
+        function subtractdisplay() { 
+                var number1 = Number(document.getElementById("number1").value);
+                var number2 = Number(document.getElementById("number2").value); 
+                document.getElementById("resultDisplay").innerHTML = number1 - number2;
+}
+        function multiplydisplay() { 
+                var number1 = Number(document.getElementById("number1").value);
+                var number2 = Number(document.getElementById("number2").value); 
+                document.getElementById("resultDisplay").innerHTML = number1 * number2;
+}
+        function dividedisplay() { 
+                var number1 = Number(document.getElementById("number1").value);
+                var number2 = Number(document.getElementById("number2").value); 
+                document.getElementById("resultDisplay").innerHTML = number1 / number2;
+}
+
+</script>
+
+<body>
+<div data-role="page">
+	<div data-role="header" data-id="persistent" data-position="fixed">
+        	<h1>Simple Calculator</h1>
+	</div>
+
+	<div data-role="content">
+		<label for="number1">Number 1:</label>
+		<input type='number' name='number1' id='number1' placeholder='0'>
+		<label for="number2">Number 2:</label>
+		<input type='number' name='number2' id='number2' placeholder='0'>
+		<br>
+		<br>
+		<br>
+		<fieldset data-role="controlgroup" data-type="horizontal">
+		<table>
+    		<tr>
+    		<td><button onclick ="sumdisplay();">Add</button></td>
+    		<td><button onclick ="multiplydisplay();">Multiply</button></td>
+   		<td><button onclick ="subtractdisplay();">Subtract</button></td>
+    		<td><button onclick ="dividedisplay();">Divide</button></td></tr>
+		</table>
+		</fieldset>
+		<br>
+		<br>
+	 	<table id="data">
+			<tr>
+			<td></td>
+			<td id='resultDisplay'>0</td>
+			</tr>
+		</table>	
+		</div>
+	<div data-role = footer data-id="persistent" data-position="fixed">
+		<h1>Simple Calculator App | Caner Irfanoglu </h1>
+	</div>
+	
+</div>
+</head>
+</html>
+

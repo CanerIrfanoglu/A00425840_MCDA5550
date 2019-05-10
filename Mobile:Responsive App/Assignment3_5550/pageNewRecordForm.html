@@ -1,0 +1,55 @@
+<html>
+<head>
+<!-- CSS -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- JQ -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+<script>
+    //for bypassing the chrome error
+    $(document).bind('mobileinit', function () {
+        $.mobile.pushStateEnabled = false;
+    });
+</script>
+
+<!-- JQM -->
+<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+</head>
+<body>
+
+ <!-- New Record Form page -->
+  <div data-role="page" id="pageNewRecordForm">
+    <div data-role="header">
+      <a href="#pageMenu" data-role="button" data-icon="bars" data-iconpos="left" data-inline="true">Menu</a>
+      <a href="#pageAbout" data-role="button" data-icon="info" data-iconpos="right" data-inline="true">Info</a>
+    <h1>New Record</h1>
+    </div>
+    <div data-role="content">
+      <form id="frmNewRecordForm" action="">
+        <div data-role="fieldcontain">
+          <div data-role="fieldcontain">
+            <label for="datExpenseDate">Date: </label>
+            <input type="date" name="datExpenseDate" data-mini="false" id="datExpenseDate" value="">
+          </div> 
+         <div data-role="fieldcontain">
+            <label for="txtType"> Learning Type </label>          
+            <input type="text" name="txtType"
+            data-mini="false" id="txtType" value="">
+          </div>
+          <div data-role="fieldcontain">
+            <label for="txtAmount">Hours Spend : </label>
+            <input type="number"  placeholder="Amount in CAD" name="txtAmount"
+            data-mini="false" id="txtAmount" value="">
+          </div>
+        </div>
+        <input type="submit" id="btnSubmitRecord" value="Add Record" onclick ="checkAddOrEditRecord()">
+      </form>
+    </div>
+  </div>
+
+
+
+</body>
+</html>

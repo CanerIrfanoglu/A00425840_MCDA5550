@@ -1,0 +1,60 @@
+<html>
+<head>
+<!-- CSS -->
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+<!-- JQ -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+<script>
+    //for bypassing the chrome error
+    $(document).bind('mobileinit', function () {
+        $.mobile.pushStateEnabled = false;
+    });
+</script>
+
+<!-- JQM -->
+<script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+
+</head>
+<body>
+<!-- Start of first page -->
+  <div data-role="page" id="pageHome">
+    <div data-role="header">
+      <h1>Learning Tracker</h1>
+    </div>
+    <div data-role="content">
+      Username:
+      <input type="text" id="username">
+      Password :
+      <input type="password" id="passcode">
+
+      <div data-role="controlgroup" id="numKeyPad">
+        <a data-role="button" id="btnEnter" onclick="redirectPage()">Login</a>
+        <a href="#pageAbout" data-role="button">About</a>
+        <a href="#pageSignup" data-role="button">New User? Please sign up</a>
+      </div>
+      
+      <div data-role="controlgroup" data-type="horizontal">
+        <a data-role="button" onclick="addValueToPassword(7)">7</a>
+        <a data-role="button" onclick="addValueToPassword(8)">8</a>
+        <a data-role="button" onclick="addValueToPassword(9)">9</a>
+      </div>
+      <div data-role="controlgroup" data-type="horizontal">
+        <a data-role="button" onclick="addValueToPassword(4)">4</a>
+        <a data-role="button" onclick="addValueToPassword(5)">5</a>
+        <a data-role="button" onclick="addValueToPassword(6)">6</a>
+      </div>
+      <div data-role="controlgroup" data-type="horizontal">
+        <a data-role="button" onclick="addValueToPassword(1)">1</a>
+        <a data-role="button" onclick="addValueToPassword(2)">2</a>
+        <a data-role="button" onclick="addValueToPassword(3)">3</a>
+      </div>
+      <div data-role="controlgroup" data-type="horizontal">
+        <a data-role="button" onclick="addValueToPassword(0)">0</a>
+        <a data-role="button" onclick="addValueToPassword('bksp')" data-icon="delete">del</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
